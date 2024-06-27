@@ -11,9 +11,9 @@ import streamlit as st
 
 # API 키 정보 로드
 load_dotenv()
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = st.secrets["api"]["key"]
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = st.secrets["GOOGLE_APPLICATION_CREDENTIALS"]["GOOGLE_APPLICATION_CREDENTIALS"]
 
-vertexai.init(project=st.secrets['GOOGLE_CLOUD_PROJECT_ID'], location="asia-northeast3")
+vertexai.init(project=st.secrets['GOOGLE_CLOUD_PROJECT_ID']['GOOGLE_CLOUD_PROJECT_ID'], location="asia-northeast3")
 
 def download_youtube(url):
     yt = YouTube(url) # YouTube 객체 생성    
@@ -40,7 +40,7 @@ def delete_video(bucket, file_name, file_path):
     st.sidebar.warning('처리가 완료었습니다', icon="⚠️")
     #print("Delete complete!")
 
-bucket_name = os.environ['GOOGLE_CLOUD_BUCKET_ID']
+bucket_name = st.secrets['GOOGLE_CLOUD_BUCKET_ID']['GOOGLE_CLOUD_BUCKET_ID']
 bucket = storage.Client().bucket(bucket_name)
 #url = "https://youtu.be/ZNjS9M0qJak?si=qMA9ONScwqBU8JSN"
 
