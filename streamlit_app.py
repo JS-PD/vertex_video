@@ -13,8 +13,8 @@ import streamlit as st
 load_dotenv()
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = st.secrets["GOOGLE_APPLICATION_CREDENTIALS"]["GOOGLE_APPLICATION_CREDENTIALS"]
-os.environ['GOOGLE_CLOUD_PROJECT_ID'] = st.secrets['GOOGLE_CLOUD_PROJECT_ID']['GOOGLE_CLOUD_PROJECT_ID']
-os.environ['GOOGLE_CLOUD_BUCKET_ID'] = st.secrets['GOOGLE_CLOUD_BUCKET_ID']['GOOGLE_CLOUD_BUCKET_ID']
+os.environ['GOOGLE_CLOUD_PROJECT_ID'] = "psychic-expanse-425002-r3"
+os.environ['GOOGLE_CLOUD_BUCKET_ID'] = "psychic-expanse-425002-r3-bucket-01"
 
 vertexai.init(project=os.environ['GOOGLE_CLOUD_PROJECT_ID'], location="asia-northeast3")
 
