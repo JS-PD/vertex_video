@@ -9,8 +9,10 @@ blob = bucket.blob("secret.json")
 with open('temp_credentials.json', 'wb') as file_obj:
     blob.download_to_file(file_obj)
 
-# 임시 파일에서 credential 로드
-credentials = service_account.Credentials.from_service_account_file("temp_credentials.json")
+credentials = service_account.Credentials.from_service_account_file(
+    "temp_credentials.json"
+)
+storage_client = storage.Client(credentials=credentials)
 
 # Google API 클라이언트 생성 (예: Google Sheets API)
 service = build('sheets', 'v4', credentials=credentials)
