@@ -12,7 +12,7 @@ import streamlit as st
 # API 키 정보 로드
 load_dotenv()
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = st.secrets["GOOGLE_APPLICATION_CREDENTIALS"]["GOOGLE_APPLICATION_CREDENTIALS"]
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "https://storage.cloud.google.com/psychic-expanse-425002-r3-bucket-01/secret.json"
 os.environ['GOOGLE_CLOUD_PROJECT_ID'] = "psychic-expanse-425002-r3"
 os.environ['GOOGLE_CLOUD_BUCKET_ID'] = "psychic-expanse-425002-r3-bucket-01"
 
