@@ -89,7 +89,7 @@ if process:
 
     responses = model.generate_content(contents, stream=True)
 
-    st.markdown(response.text.replace('\n', ' '))
+    st.markdown(responses.text.replace('\n', ' '))
 
     #print("\n\n")
     delete_video(bucket, file_name, file_path)
