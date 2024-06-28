@@ -30,23 +30,6 @@ os.environ['GOOGLE_CLOUD_BUCKET_ID'] = st.secrets["GOOGLE_CLOUD_BUCKET_ID"]["GOO
 
 vertexai.init(project=os.environ['GOOGLE_CLOUD_PROJECT_ID'], location="asia-northeast3")
 
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-# Display chat messages from history on app rerun
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
-
-# React to user input
-if prompt := st.chat_input("영상 관련 질문을 입력하세요"):
-    # Display user message in chat message container
-    with st.chat_message("user"):
-        st.markdown(prompt)
-    # Add user message to chat history
-    st.session_state.messages.append({"role": "user", "content": prompt})
-
-    
 def download_youtube(url):
     yt = YouTube(url) # YouTube 객체 생성    
     stream = yt.streams.get_highest_resolution() # 가장 높은 해상도의 스트림 선택
@@ -78,6 +61,8 @@ bucket = storage.Client().bucket(bucket_name)
 
 video_url = st.text_input("Youtube URL을 입력하세요", 'https://youtu.be/WENUvclwo18?si=CngwTn2onM7PzZcP')
 
+prompt = st.text_input("영상 관련 질문을 입력하세요", '영상에 대해 자세히 설명해주세요')
+
 process = st.button("영상 분석")
 
 if process:
@@ -104,14 +89,7 @@ if process:
     responses = model.generate_content(contents, stream=True)
     for response in responses:
         print(response.text.strip(), end="")
-
-        
-        with st.chat_message("assistant"):
-            st.markdown(response)
-        # Add assistant response to chat history
-        st.session_state.messages.append({"role": "assistant", "content": response.text.strip()})
-        
-        #st.markdown(response.text.strip())
+        st.markdown(re.sub(r'\s+', ' ', response.text).strip())
 
     #print("\n\n")
     delete_video(bucket, file_name, file_path)
