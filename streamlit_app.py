@@ -15,7 +15,7 @@ import streamlit as st
 load_dotenv()
 
 # Base64 인코딩된 문자열을 디코딩하여 JSON 객체로 변환
-decoded_credentials = base64.b64decode(st.secrets["GOOGLE_APPLICATION_CREDENTIALS"]["GOOGLE_APPLICATION_CREDENTIALS"]))
+decoded_credentials = base64.b64decode(st.secrets["GOOGLE_APPLICATION_CREDENTIALS"]["GOOGLE_APPLICATION_CREDENTIALS"])
 credentials_info = json.loads(decoded_credentials)
 credentials_path = '/tmp/credentials.json'
 
