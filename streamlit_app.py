@@ -88,8 +88,9 @@ if process:
     #video_bytes = video_file.read()
 
     responses = model.generate_content(contents, stream=True)
-
-    st.markdown(responses.text.replace('\n', ' '))
+    for response in responses:
+        print(response.text.strip(), end="")
+        st.write(responses.textstrip())
 
     #print("\n\n")
     delete_video(bucket, file_name, file_path)
