@@ -15,7 +15,7 @@ import streamlit as st
 load_dotenv()
 
 # Base64 인코딩된 문자열을 디코딩하여 JSON 객체로 변환
-decoded_credentials = base64.b64decode(st.secrets["encoded_google_credentials"])
+decoded_credentials = base64.b64decode(st.secrets["GOOGLE_APPLICATION_CREDENTIALS"])
 credentials_info = json.loads(decoded_credentials)
 credentials_path = '/tmp/credentials.json'
 
@@ -25,8 +25,8 @@ with open(credentials_path, 'w') as f:
     
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_path
 
-os.environ['GOOGLE_CLOUD_PROJECT_ID'] = "psychic-expanse-425002-r3"
-os.environ['GOOGLE_CLOUD_BUCKET_ID'] = "psychic-expanse-425002-r3-bucket-01"
+os.environ['GOOGLE_CLOUD_PROJECT_ID'] = st.secrets["GOOGLE_CLOUD_PROJECT_ID"]
+os.environ['GOOGLE_CLOUD_BUCKET_ID'] = st.secrets["GOOGLE_CLOUD_BUCKET_ID"]
 
 vertexai.init(project=os.environ['GOOGLE_CLOUD_PROJECT_ID'], location="asia-northeast3")
 
@@ -65,10 +65,6 @@ prompt = st.text_input("영상 관련 질문을 입력하세요", '영상에 대
 
 process = st.button("영상 분석")
 
-if video_url:
-    st.video(video_url)
-
-
 if process:
 
     file_path = download_youtube(video_url)
@@ -98,4 +94,5 @@ if process:
     #print("\n\n")
     delete_video(bucket, file_name, file_path)
 
-
+if video_url:
+    st.video(video_url)
