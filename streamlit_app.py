@@ -39,7 +39,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # React to user input
-if prompt := st.chat_input("영상 관련 질문을 입력하세요."):
+if prompt := st.chat_input("영상 관련 질문을 입력하세요"):
     # Display user message in chat message container
     with st.chat_message("user"):
         st.markdown(prompt)
