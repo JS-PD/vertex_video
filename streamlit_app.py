@@ -89,7 +89,7 @@ if process:
     responses = model.generate_content(contents, stream=True)
     for response in responses:
         print(response.text.strip(), end="")
-        st.chat_message("assistant").write(response.text.strip())
+        st.text_input(response.text.strip())
         #st.markdown(response.text.strip())
 
     #print("\n\n")
