@@ -1,12 +1,13 @@
-# youtube_pipline.ipynb
-from vertexai.generative_models import GenerativeModel, Part
-import vertexai
 import os
 import json
 import base64
+import re
 from dotenv import load_dotenv
 
+from vertexai.generative_models import GenerativeModel, Part
+import vertexai
 from google.cloud import storage
+
 from pytube import YouTube
 
 import streamlit as st
