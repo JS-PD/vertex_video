@@ -17,3 +17,5 @@ except json.JSONDecodeError as e:
     st.error(f"JSON parsing error: {e}")
 except Exception as e:
     st.error(f"An error occurred: {e}")
+
+st.markdown(st.secrets["google_credentials"])
