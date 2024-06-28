@@ -14,3 +14,5 @@ with open(credentials_path, 'w') as f:
 
 # 환경 변수 설정
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_path
+
+print(decoded_credentials)
