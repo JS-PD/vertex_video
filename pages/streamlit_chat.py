@@ -29,7 +29,7 @@ def encode_image(image_path):
     with open(image_path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode("utf-8")
 
-base64_image = encode_image("cat.webp")
+#base64_image = encode_image("cat.webp")
 
 # # User-provided prompt
 if prompt := st.chat_input():
