@@ -3,3 +3,6 @@ python-dotenv
 google-cloud-aiplatform
 pytube
 openai
+pandas
+altair
+URLError
