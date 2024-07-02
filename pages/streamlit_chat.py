@@ -6,7 +6,11 @@ import openai
 
 import streamlit as st
 
-os.environ['OPENAI_API_KEY'] = st.secrets["OPENAI_API_KEY"]["OPENAI_API_KEY"]
+# API 키 정보 로드
+load_dotenv()
+
+if os.environ['OPENAI_API_KEY'] == "":
+    os.environ['OPENAI_API_KEY'] = st.secrets["OPENAI_API_KEY"]["OPENAI_API_KEY"]
 
 st.set_page_config(page_title="DataFrame Demo", page_icon="📊")
 

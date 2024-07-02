@@ -37,7 +37,11 @@ from bs4 import BeautifulSoup
 
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
-#os.environ['OPENAI_API_KEY'] = st.secrets["OPENAI_API_KEY"]["OPENAI_API_KEY"]
+try:
+    os.environ['OPENAI_API_KEY'] = st.secrets["OPENAI_API_KEY"]["OPENAI_API_KEY"]
+
+except:
+    os.environ['OPENAI_API_KEY'] = st.secrets["OPENAI_API_KEY"]["OPENAI_API_KEY"]
 
 def main():
     st.set_page_config(

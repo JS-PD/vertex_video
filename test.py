@@ -31,7 +31,3 @@ with col2:
     if text_input:
         st.write("You entered: ", text_input)
 
-process = st.button("영상 분석")
-
-if process:
-    st.write("You entered: ", text_input)
