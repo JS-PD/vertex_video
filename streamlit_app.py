@@ -62,14 +62,18 @@ bucket = storage.Client().bucket(bucket_name)
 
 video_url = st.text_input("Youtube URL을 입력하세요", 'https://youtu.be/WENUvclwo18?si=CngwTn2onM7PzZcP')
 
-prompt = st.text_input("영상 관련 질문을 입력하세요", '영상에 대해 자세히 설명해주세요')
+if "text" not in st.session_state:
+    st.session_state["text"] = "영상에 대해 자세히 설명해주세요"
 
+prompt = st.text_input("텍스트 입력:", key="text_input", value=st.session_state["text"])
 
-st.text_input(prompt)
+#prompt = st.text_input("영상 관련 질문을 입력하세요", key = 'input_prompt', value='영상에 대해 자세히 설명해주세요')
 
 process = st.button("영상 분석")
 
 if process:
+    
+    st.session_state["text"] = st.session_state["text"]
 
     file_path = download_youtube(video_url)
     file_name = os.path.basename(file_path) 
@@ -98,6 +102,6 @@ if process:
     #print("\n\n")
     delete_video(bucket, file_name, file_path)
 
-
+    
 if video_url:
     st.video(video_url)
