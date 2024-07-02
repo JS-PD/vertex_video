@@ -73,7 +73,7 @@ process = st.button("영상 분석")
 
 if process:
     
-    st.session_state["text"] = prompt
+    st.session_state.text_input = prompt
 
     file_path = download_youtube(video_url)
     file_name = os.path.basename(file_path) 
@@ -82,7 +82,7 @@ if process:
         uri=f"gs://{bucket_name}/{file_name}",
         mime_type="video/mp4",
     )
-    prompt = prompt + ' 당신은 영상분석 전문가입니다. 영상에 대한 설명을 단락으로 나누어 500자 이상으로 자세히 설명해주세요. 주요 문구나 강조해야할 부분이 있다면 강조 표시를 해주세요'
+    prompt = prompt + ' 영상에 대한 설명을 단락으로 나누어 500자 이상으로 자세히 설명해주세요. 주요 문구나 강조해야할 부분이 있다면 강조 표시를 해주세요'
 
     print(prompt)
     contents = [prompt, video]
