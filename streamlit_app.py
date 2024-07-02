@@ -64,6 +64,9 @@ video_url = st.text_input("Youtube URL을 입력하세요", 'https://youtu.be/WE
 
 prompt = st.text_input("영상 관련 질문을 입력하세요", '영상에 대해 자세히 설명해주세요')
 
+
+st.text_input(prompt)
+
 process = st.button("영상 분석")
 
 if process:
@@ -94,6 +97,7 @@ if process:
 
     #print("\n\n")
     delete_video(bucket, file_name, file_path)
+
 
 if video_url:
     st.video(video_url)
