@@ -10,6 +10,7 @@ import streamlit as st
 load_dotenv()
 
 if os.environ['OPENAI_API_KEY'] == "":
+    print("Use Streamlit Secret Key")
     os.environ['OPENAI_API_KEY'] = st.secrets["OPENAI_API_KEY"]["OPENAI_API_KEY"]
 
 st.set_page_config(page_title="DataFrame Demo", page_icon="📊")
