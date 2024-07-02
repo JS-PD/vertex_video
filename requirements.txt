@@ -5,3 +5,14 @@ pytube
 openai
 pandas
 altair
+tiktoken
+loguru
+langchain
+langchain-community
+streamlit-aggrid
+beautifulsoup4
+unstructured
+networkx
+openpyxl
+sentence_transformers
+faiss-cpu

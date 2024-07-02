@@ -49,7 +49,7 @@ if prompt := st.chat_input():
 client = openai.OpenAI(api_key=os.environ['OPENAI_API_KEY'])
 
 completion = client.chat.completions.create(
-    model="gpt-4",
+    model="gpt-4-turbo",
     #model="gpt-3.5-turbo",
     stream=True,
     messages=st.session_state.messages
