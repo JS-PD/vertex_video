@@ -55,13 +55,12 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
+
 key_value = os.environ.get('OPENAI_API_KEY')
 
 if key_value is None:
     os.environ['OPENAI_API_KEY'] = st.secrets["OPENAI_API_KEY"]["OPENAI_API_KEY"]
     logger.info("Use Streamlit Secret Key")
-else:
-    logger.info("Use .env Secret Key")
 
 
 def main():
