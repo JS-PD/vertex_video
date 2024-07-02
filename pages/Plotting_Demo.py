@@ -15,7 +15,7 @@ st.write(
 
 @st.cache_data
 def get_UN_data():
-    df = pd.read_csv("ky_strawberry2.csv", encoding='cp949')
+    df = pd.read_csv("/pages/ky_strawberry2.csv", encoding='cp949')
     return df.set_index("수집일")
 
 
