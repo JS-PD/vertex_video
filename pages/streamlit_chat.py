@@ -9,9 +9,11 @@ import streamlit as st
 # API 키 정보 로드
 load_dotenv()
 
-if os.environ['OPENAI_API_KEY'] == "":
-    print("Use Streamlit Secret Key")
+try:
     os.environ['OPENAI_API_KEY'] = st.secrets["OPENAI_API_KEY"]["OPENAI_API_KEY"]
+    print("Use Streamlit Secret Key")
+except:    
+    print("Use .env Secret Key")
 
 st.set_page_config(page_title="DataFrame Demo", page_icon="📊")
 
