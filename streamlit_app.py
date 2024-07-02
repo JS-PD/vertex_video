@@ -63,7 +63,7 @@ bucket = storage.Client().bucket(bucket_name)
 
 video_url = st.text_input("Youtube URL을 입력하세요", key="video_input", value='https://youtu.be/WENUvclwo18?si=CngwTn2onM7PzZcP')
 
-prompt = st.text_input("영상 관련 질문을 입력하세요", key="text_input", value=st.session_state.input_text, placeholder='ex) 영상에 대해 자세히 설명해주세요')
+prompt = st.text_input("영상 관련 질문을 입력하세요", key="text_input", value=st.session_state.text_input, placeholder='ex) 영상에 대해 자세히 설명해주세요')
 
 process = st.button("영상 분석")
 
