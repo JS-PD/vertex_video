@@ -65,61 +65,12 @@ def main():
         
         data_api_key = st.text_input("DATA.GO.KR API Key", key="data_api_key", type="password")
 
-        get_username = st.text_input("Insta username", key="get_username", type="default")
-
-        get_password = st.text_input("Insta password", key="get_password", type="password")
-
-
-
-        get_word = st.text_input('검색할 #태그를 입력하세요', placeholder='ex)스마트팜')
-        get_insta = st.button("Get Instagram")
-
         get_api = st.button("get_api")
 
         get_url = st.text_input('검색할 기사의 URL를 입력하세요', 'https://www.aflnews.co.kr/news/articleView.html?idxno=267041', placeholder='ex)https://www.aflnews.co.kr/news/articleView.html?idxno=267041')
         get_news = st.button("get_news")
 
         get_data = st.button("get_data")
-        
-    if get_insta:
-        if not openai_api_key:
-            st.info("Open AI에서 발급받은 키를 입력해주세요")
-            st.stop()
-        if not get_word:
-            warning_message = st.sidebar.warning('검색할 #태그를 입력하세요', icon="⚠️")
-            time.sleep(2)
-            warning_message.empty()
-            st.stop()
-        if not get_username:
-            st.info("ID를 입력해주세요")
-            st.stop()
-        if not get_password:
-            st.info("패스워드를 입력해주세요")
-            st.stop()
-        else:   
-            import pages.get_insta_hashtag as get_insta_hashtag
-            get_insta_hashtag.main(get_word, get_username, get_password)
-
-            warning_message = st.sidebar.warning('수집 된 데이터를 처리하고 있습니다', icon="⚠️")
-            
-            df = pd.read_excel('insta_crawling.xlsx')
-            AgGrid(df)
-
-            doc_list = []
-            loader = UnstructuredExcelLoader("insta_crawling.xlsx")
-            documents = loader.load_and_split()
-            doc_list.extend(documents)
-            
-            text_chunks = get_text_chunks(doc_list)
-            vetorestore = get_vectorstore(text_chunks)
-        
-            st.session_state.conversation = get_conversation_chain(vetorestore,openai_api_key) 
-
-            st.session_state.processComplete = True
-
-            warning_message.empty()
-            warning_message = st.sidebar.warning('데이터 처리가 완료었습니다', icon="⚠️")
-
 
     if get_news:
         if not openai_api_key:
