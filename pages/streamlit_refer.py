@@ -32,16 +32,36 @@ import requests
 import json
 import os
 
+from dotenv import load_dotenv
+
 import bs4
 from bs4 import BeautifulSoup
 
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
-try:
-    os.environ['OPENAI_API_KEY'] = st.secrets["OPENAI_API_KEY"]["OPENAI_API_KEY"]
 
-except:
-    os.environ['OPENAI_API_KEY'] = st.secrets["OPENAI_API_KEY"]["OPENAI_API_KEY"]
+# API 키 정보 로드
+load_dotenv()
+
+import logging
+
+# 로거 설정
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+# 스트림 핸들러 생성
+handler = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
+try:
+    if os.environ['OPENAI_API_KEY'] == "":
+        os.environ['OPENAI_API_KEY'] = st.secrets["OPENAI_API_KEY"]["OPENAI_API_KEY"]
+        logger.info("Use Streamlit Secret Key")
+except:    
+    logger.info("Use .env Secret Key")
+
 
 def main():
     st.set_page_config(
