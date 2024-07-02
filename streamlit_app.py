@@ -63,12 +63,10 @@ bucket = storage.Client().bucket(bucket_name)
 
 
 if 'video_input' not in st.session_state:
-    st.session_state.video_input = ''
+    st.session_state.video_input = 'https://youtu.be/WENUvclwo18?si=CngwTn2onM7PzZcP'
 
 if 'text_input' not in st.session_state:
     st.session_state.text_input = ''
-
-st.session_state.video_input = 'https://youtu.be/WENUvclwo18?si=CngwTn2onM7PzZcP'
 
 video_url = st.text_input("Youtube URL을 입력하세요", key="video_input", value=st.session_state.video_input)
 
