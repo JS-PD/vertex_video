@@ -189,9 +189,6 @@ def main():
         warning_message = st.sidebar.warning('데이터 처리가 완료었습니다', icon="⚠️")
 
     if process:
-        if not openai_api_key:
-            st.info("Open AI에서 발급받은 키를 입력해주세요")
-            st.stop()
         files_text = get_text(uploaded_files)
         text_chunks = get_text_chunks(files_text)
         vetorestore = get_vectorstore(text_chunks)
