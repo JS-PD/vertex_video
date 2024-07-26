@@ -83,8 +83,6 @@ def main():
     with st.sidebar:
         uploaded_files =  st.file_uploader("Upload your file",type=['pdf','docx','pptx','txt','csv','xlsx'],accept_multiple_files=True)
 
-        openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password", )
-
         process = st.button("Process")
         
         data_api_key = st.text_input("DATA.GO.KR API Key", key="data_api_key", type="password")
@@ -187,7 +185,7 @@ def main():
         text_chunks = get_text_chunks(files_text)
         vetorestore = get_vectorstore(text_chunks)
      
-        st.session_state.conversation = get_conversation_chain(vetorestore,openai_api_key) 
+        st.session_state.conversation = get_conversation_chain(vetorestore,os.environ['OPENAI_API_KEY']) 
 
         st.session_state.processComplete = True
 
@@ -195,9 +193,7 @@ def main():
         if not data_api_key:
             st.info("공공데이터 포럼에서 발급받은 키를 입력해주세요")
             st.stop()
-        if not openai_api_key:
-            st.info("Open AI에서 발급받은 키를 입력해주세요")
-            st.stop()
+
         warning_message = st.sidebar.warning('수집 된 데이터를 처리하고 있습니다', icon="⚠️")
 
         url = 'http://apis.data.go.kr/1230000/BidPublicInfoService04/getBidPblancListInfoThngPPSSrch01?'
@@ -230,7 +226,7 @@ def main():
         text_chunks = get_text_chunks(doc_list)
         vetorestore = get_vectorstore(text_chunks)
     
-        st.session_state.conversation = get_conversation_chain(vetorestore,openai_api_key) 
+        st.session_state.conversation = get_conversation_chain(vetorestore,os.environ['OPENAI_API_KEY']) 
 
         st.session_state.processComplete = True
 
