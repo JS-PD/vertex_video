@@ -97,9 +97,6 @@ def main():
         get_data = st.button("get_data")
 
     if get_news:
-        if not openai_api_key:
-            st.info("Open AI에서 발급받은 키를 입력해주세요")
-            st.stop()
         if not get_url:
             warning_message = st.sidebar.warning('검색할 URL을 입력하세요', icon="⚠️")
             time.sleep(2)
