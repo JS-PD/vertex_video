@@ -56,13 +56,10 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 
-key_value = os.environ.get('OPENAI_API_KEY')
-key_value2 = os.environ.get('DATA_API_KEY')
-
-if key_value is None:
+if os.environ.get('OPENAI_API_KEY') is None:
     os.environ['OPENAI_API_KEY'] = st.secrets["OPENAI_API_KEY"]["OPENAI_API_KEY"]
     logger.info("Use Streamlit Secret Key")
-if key_value2 is None:
+if os.environ.get('DATA_API_KEY') is None:
     os.environ['DATA_API_KEY'] = st.secrets["DATA_API_KEY"]["DATA_API_KEY"]
     logger.info("Use Streamlit Secret Key")
 
@@ -197,8 +194,6 @@ def main():
         url = 'http://apis.data.go.kr/1230000/BidPublicInfoService04/getBidPblancListInfoThngPPSSrch01?'
         params ={'serviceKey' : os.environ['DATA_API_KEY']
                 , 'numOfRows' : '10', 'pageNo' : '1', 'inqryDiv' : '1', 'indstrytyCd' : '1244', 'inqryBgnDt' : '202402110000', 'inqryEndDt' : '202403120000', 'type' : 'json' }
-
-        warning_message = st.sidebar.warning(params)
         
         response = requests.get(url, params=params)
         content = response.text
