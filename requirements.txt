@@ -16,3 +16,4 @@ networkx
 openpyxl
 sentence_transformers
 faiss-cpu
+pytubefix
