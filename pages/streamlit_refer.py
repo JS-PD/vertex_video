@@ -83,7 +83,7 @@ def main():
     with st.sidebar:
         uploaded_files =  st.file_uploader("Upload your file",type=['pdf','docx','pptx','txt','csv','xlsx'],accept_multiple_files=True)
 
-        openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password", )
+        #openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password", )
 
         process = st.button("Process")
         
@@ -135,7 +135,7 @@ def main():
             text_chunks = get_text_chunks(doc_list)
             vetorestore = get_vectorstore(text_chunks)
         
-            st.session_state.conversation = get_conversation_chain(vetorestore,openai_api_key) 
+            st.session_state.conversation = get_conversation_chain(vetorestore,os.environ['OPENAI_API_KEY']) 
 
             st.session_state.processComplete = True
 
@@ -143,9 +143,6 @@ def main():
             warning_message = st.sidebar.warning('데이터 처리가 완료었습니다', icon="⚠️")
 
     if get_data:
-        if not openai_api_key:
-            st.info("Open AI에서 발급받은 키를 입력해주세요")
-            st.stop()
         url = "https://scienceon.kisti.re.kr/aiq/mlsh3/selectAIQMlshList.do"
 
         response_header = requests.get(url)
@@ -178,7 +175,7 @@ def main():
         text_chunks = get_text_chunks(doc_list)
         vetorestore = get_vectorstore(text_chunks)
     
-        st.session_state.conversation = get_conversation_chain(vetorestore,openai_api_key) 
+        st.session_state.conversation = get_conversation_chain(vetorestore,os.environ['OPENAI_API_KEY']) 
 
         st.session_state.processComplete = True
 
@@ -190,16 +187,13 @@ def main():
         text_chunks = get_text_chunks(files_text)
         vetorestore = get_vectorstore(text_chunks)
      
-        st.session_state.conversation = get_conversation_chain(vetorestore,openai_api_key) 
+        st.session_state.conversation = get_conversation_chain(vetorestore,os.environ['OPENAI_API_KEY']) 
 
         st.session_state.processComplete = True
 
     if get_api:
         if not data_api_key:
             st.info("공공데이터 포럼에서 발급받은 키를 입력해주세요")
-            st.stop()
-        if not openai_api_key:
-            st.info("Open AI에서 발급받은 키를 입력해주세요")
             st.stop()
         warning_message = st.sidebar.warning('수집 된 데이터를 처리하고 있습니다', icon="⚠️")
 
@@ -233,7 +227,7 @@ def main():
         text_chunks = get_text_chunks(doc_list)
         vetorestore = get_vectorstore(text_chunks)
     
-        st.session_state.conversation = get_conversation_chain(vetorestore,openai_api_key) 
+        st.session_state.conversation = get_conversation_chain(vetorestore,os.environ['OPENAI_API_KEY']) 
 
         st.session_state.processComplete = True
 
@@ -337,8 +331,8 @@ def get_vectorstore(text_chunks):
     vectordb = FAISS.from_documents(text_chunks, embeddings)
     return vectordb
 
-def get_conversation_chain(vetorestore,openai_api_key):
-    llm = ChatOpenAI(openai_api_key=openai_api_key, model_name = 'gpt-4o-mini',temperature=0)
+def get_conversation_chain(vetorestore,os.environ['OPENAI_API_KEY']):
+    llm = ChatOpenAI(openai_api_key=os.environ['OPENAI_API_KEY'], model_name = 'gpt-4-turbo',temperature=0)
     
     conversation_chain = ConversationalRetrievalChain.from_llm(
             llm=llm, 
