@@ -8,7 +8,9 @@ from vertexai.generative_models import GenerativeModel, Part
 import vertexai
 from google.cloud import storage
 
-from pytube import YouTube
+#from pytube import YouTube
+from pytubefix import YouTube
+from pytubefix.cli import on_progress
 
 import streamlit as st
 
