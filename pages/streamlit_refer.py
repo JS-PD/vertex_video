@@ -60,6 +60,7 @@ key_value = os.environ.get('OPENAI_API_KEY')
 
 if key_value is None:
     os.environ['OPENAI_API_KEY'] = st.secrets["OPENAI_API_KEY"]["OPENAI_API_KEY"]
+    os.environ['DATA_API_KEY'] = st.secrets["DATA_API_KEY"]["DATA_API_KEY"]
     logger.info("Use Streamlit Secret Key")
 
 
@@ -84,8 +85,6 @@ def main():
         uploaded_files =  st.file_uploader("Upload your file",type=['pdf','docx','pptx','txt','csv','xlsx'],accept_multiple_files=True)
 
         process = st.button("Process")
-        
-        data_api_key = st.text_input("DATA.GO.KR API Key", key="data_api_key", type="password")
 
         get_api = st.button("get_api")
 
@@ -190,14 +189,11 @@ def main():
         st.session_state.processComplete = True
 
     if get_api:
-        if not data_api_key:
-            st.info("공공데이터 포럼에서 발급받은 키를 입력해주세요")
-            st.stop()
 
         warning_message = st.sidebar.warning('수집 된 데이터를 처리하고 있습니다', icon="⚠️")
 
         url = 'http://apis.data.go.kr/1230000/BidPublicInfoService04/getBidPblancListInfoThngPPSSrch01?'
-        params ={'serviceKey' : data_api_key
+        params ={'serviceKey' : os.environ['DATA_API_KEY']
                 , 'numOfRows' : '10', 'pageNo' : '1', 'inqryDiv' : '1', 'indstrytyCd' : '1244', 'inqryBgnDt' : '202402110000', 'inqryEndDt' : '202403120000', 'type' : 'json' }
 
         response = requests.get(url, params=params)
