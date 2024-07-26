@@ -135,7 +135,7 @@ def main():
             text_chunks = get_text_chunks(doc_list)
             vetorestore = get_vectorstore(text_chunks)
         
-            st.session_state.conversation = get_conversation_chain(vetorestore,os.environ['OPENAI_API_KEY']) 
+            st.session_state.conversation = get_conversation_chain(vetorestore,os.environ.get('OPENAI_API_KEY')) 
 
             st.session_state.processComplete = True
 
@@ -175,7 +175,7 @@ def main():
         text_chunks = get_text_chunks(doc_list)
         vetorestore = get_vectorstore(text_chunks)
     
-        st.session_state.conversation = get_conversation_chain(vetorestore,os.environ['OPENAI_API_KEY']) 
+        st.session_state.conversation = get_conversation_chain(vetorestore,os.environ.get('OPENAI_API_KEY')) 
 
         st.session_state.processComplete = True
 
@@ -187,7 +187,7 @@ def main():
         text_chunks = get_text_chunks(files_text)
         vetorestore = get_vectorstore(text_chunks)
      
-        st.session_state.conversation = get_conversation_chain(vetorestore,os.environ['OPENAI_API_KEY']) 
+        st.session_state.conversation = get_conversation_chain(vetorestore,os.environ.get('OPENAI_API_KEY')) 
 
         st.session_state.processComplete = True
 
@@ -227,7 +227,7 @@ def main():
         text_chunks = get_text_chunks(doc_list)
         vetorestore = get_vectorstore(text_chunks)
     
-        st.session_state.conversation = get_conversation_chain(vetorestore,os.environ['OPENAI_API_KEY']) 
+        st.session_state.conversation = get_conversation_chain(vetorestore,os.environ.get('OPENAI_API_KEY')) 
 
         st.session_state.processComplete = True
 
@@ -331,8 +331,8 @@ def get_vectorstore(text_chunks):
     vectordb = FAISS.from_documents(text_chunks, embeddings)
     return vectordb
 
-def get_conversation_chain(vetorestore,os.environ['OPENAI_API_KEY']):
-    llm = ChatOpenAI(openai_api_key=os.environ['OPENAI_API_KEY'], model_name = 'gpt-4-turbo',temperature=0)
+def get_conversation_chain(vetorestore,os.environ.get('OPENAI_API_KEY')):
+    llm = ChatOpenAI(openai_api_key=os.environ.get('OPENAI_API_KEY'), model_name = 'gpt-4-turbo',temperature=0)
     
     conversation_chain = ConversationalRetrievalChain.from_llm(
             llm=llm, 
