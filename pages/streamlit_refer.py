@@ -189,10 +189,7 @@ def main():
         st.session_state.processComplete = True
 
     if get_api:
-        if not os.environ['DATA_API_KEY']:
-            st.info("공공데이터 포럼에서 발급받은 키를 입력해주세요")
-            st.stop()
-            
+        
         warning_message = st.sidebar.warning('수집 된 데이터를 처리하고 있습니다', icon="⚠️")
 
         url = 'http://apis.data.go.kr/1230000/BidPublicInfoService04/getBidPblancListInfoThngPPSSrch01?'
