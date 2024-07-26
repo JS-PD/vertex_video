@@ -143,9 +143,6 @@ def main():
             warning_message = st.sidebar.warning('데이터 처리가 완료었습니다', icon="⚠️")
 
     if get_data:
-        if not openai_api_key:
-            st.info("Open AI에서 발급받은 키를 입력해주세요")
-            st.stop()
         url = "https://scienceon.kisti.re.kr/aiq/mlsh3/selectAIQMlshList.do"
 
         response_header = requests.get(url)
@@ -178,7 +175,7 @@ def main():
         text_chunks = get_text_chunks(doc_list)
         vetorestore = get_vectorstore(text_chunks)
     
-        st.session_state.conversation = get_conversation_chain(vetorestore,openai_api_key) 
+        st.session_state.conversation = get_conversation_chain(vetorestore,os.environ['OPENAI_API_KEY']) 
 
         st.session_state.processComplete = True
 
