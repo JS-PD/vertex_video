@@ -57,12 +57,14 @@ logger.addHandler(handler)
 
 
 key_value = os.environ.get('OPENAI_API_KEY')
+key_value2 = os.environ.get('DATA_API_KEY')
 
 if key_value is None:
     os.environ['OPENAI_API_KEY'] = st.secrets["OPENAI_API_KEY"]["OPENAI_API_KEY"]
+    logger.info("Use Streamlit Secret Key")
+if key_value2 is None:
     os.environ['DATA_API_KEY'] = st.secrets["DATA_API_KEY"]["DATA_API_KEY"]
     logger.info("Use Streamlit Secret Key")
-
 
 def main():
     st.set_page_config(
@@ -197,6 +199,39 @@ def main():
                 , 'numOfRows' : '10', 'pageNo' : '1', 'inqryDiv' : '1', 'indstrytyCd' : '1244', 'inqryBgnDt' : '202402110000', 'inqryEndDt' : '202403120000', 'type' : 'json' }
 
         warning_message = st.sidebar.warning(params)
+        
+        response = requests.get(url, params=params)
+        content = response.text
+
+        json_object = json.loads(content)
+
+        body = json_object['response']['body']['items']
+
+        df = pd.json_normalize(body)
+
+        df.to_excel('data_api_result.xlsx')
+
+        st_df = pd.DataFrame(data={
+            '입찰공고명':[df['rgstTyNm'][0],df['rgstTyNm'][1],df['rgstTyNm'][2]],
+            '품목명':[df['bidNtceNm'][0],df['bidNtceNm'][1],df['bidNtceNm'][2]],
+            '담당자':[df['ntceInsttOfclNm'][0],df['ntceInsttOfclNm'][1],df['ntceInsttOfclNm'][2]]
+        })
+        st.dataframe(st_df)
+        
+        doc_list = []
+        loader = UnstructuredExcelLoader("data_api_result.xlsx")
+        documents = loader.load_and_split()
+        doc_list.extend(documents)
+        
+        text_chunks = get_text_chunks(doc_list)
+        vetorestore = get_vectorstore(text_chunks)
+    
+        st.session_state.conversation = get_conversation_chain(vetorestore,os.environ['OPENAI_API_KEY']) 
+
+        st.session_state.processComplete = True
+
+        warning_message.empty()
+        warning_message = st.sidebar.warning('데이터 처리가 완료었습니다', icon="⚠️")
         
 
     if 'messages' not in st.session_state:
