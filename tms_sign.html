@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<title>안전교육 확인서 !</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="user-scalable=no">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="pragma" content="no-cache">
+<meta name="mobile-web-app-capable" content="yes"> 
+
+<link rel="shortcut icon" href="images/favicon.ico">
+<link rel="stylesheet" href="css/style_pdf.css" id="style_pdf_link">
+<link rel="stylesheet" href="css/dialog.css">
+<link rel="stylesheet" href="css/dialog-simple.css">
+
+<link rel="stylesheet" href="css/simplepicker.css">
+
+<script>
+    const tms_path = "https://si-ware.dongoh.co.kr/EXT_INPUT/";
+    const config_text = "(DEV)";
+    const css_update = "20221220_01";
+</script>
+<script>
+    document.getElementById("style_pdf_link").href = "css/style_pdf.css?ver=" + css_update;
+</script>
+<script src="js/jquery-3.7.0.min.js"></script>
+<script type="text/javascript" src="js/dialog.js"></script>
+<script type="text/javascript" src="js/dialog-polyfill.js"></script>
+<script src="js/simplepicker.js"></script>
+
+<script>   
+
+    let sDate;
+    const urlParams = new URLSearchParams(window.location.search);
+    const sDateFromUrl = urlParams.get('sDate');
+
+    if (sDateFromUrl) {
+        sDate = sDateFromUrl;
+    } else {
+        var initDate = new Date();
+        var inityear = initDate.getFullYear();
+        var initmonth = ("0" + (1 + initDate.getMonth())).slice(-2);
+        var initday = ("0" + initDate.getDate()).slice(-2);
+        sDate = inityear + "-" + initmonth + "-" + initday;
+    }
+
+    jQuery(document).ready(function ($) {
+
+        document.getElementById("config_text").innerHTML = config_text;
+
+        document.getElementById("simplepicker").innerHTML = sDate;
+    });
+
+    function ext_car_list() {
+
+        var I_BEGDA = sDate;        
+
+        // Note: The following AJAX call depends on a backend service at the specified .aspx endpoint.
+        // This will require a server environment capable of processing this request.
+        jQuery.ajax({
+            type: "post",
+            data: {
+                I_BEGDA: I_BEGDA
+            },
+            url: tms_path + "ext_car_ent_list.aspx",
+
+            //dataType:"text/html",
+            success: function (result) {
+                if (result != undefined) {
+                    var table_data = "";
+                    $("#table_data").html(table_data);
+
+                    var arrResultItem = result.split('::#');
+
+                    arrResultItem.shift();
+
+                    if (arrResultItem.length <= 0) {
+                        document.getElementById("empty_data").innerHTML = "<div class='empty_data'><span>출입차 내역이 존재하지 않습니다</span></div>";
+                        document.getElementById("count").innerHTML = "";
+                        $("#table_data").html("");
+                        return false;
+                    } else {
+                        document.getElementById("empty_data").innerHTML = "";
+                    }
+
+                    var RESULT_COLLECTION = new Array();
+
+                    for (var x = 0; x < arrResultItem.length; x++) {
+
+                        var arrResultData = arrResultItem[x].split('::@');
+
+                        var nCollectionLength = RESULT_COLLECTION.length;
+
+                        RESULT_COLLECTION[nCollectionLength] = new Object();
+                        RESULT_COLLECTION[nCollectionLength].WADAT = arrResultData[0];
+                        RESULT_COLLECTION[nCollectionLength].WATIM = arrResultData[1];
+                        RESULT_COLLECTION[nCollectionLength].TRANO = arrResultData[2];
+                        RESULT_COLLECTION[nCollectionLength].CARNO = arrResultData[3];
+                        RESULT_COLLECTION[nCollectionLength].TNAME = arrResultData[4];
+                        RESULT_COLLECTION[nCollectionLength].TELNO = arrResultData[5];
+                        RESULT_COLLECTION[nCollectionLength].TRLNO = arrResultData[6];
+                        RESULT_COLLECTION[nCollectionLength].CONF = arrResultData[7];
+                        RESULT_COLLECTION[nCollectionLength].EXTIM = arrResultData[8];
+
+                    }
+
+                    RESULT_COLLECTION.sort(function (a, b) {
+                        let x = a.WATIM.toLowerCase();
+                        let y = b.WATIM.toLowerCase();
+                        if (x < y) {
+                            return -1;
+                        }
+                        if (x > y) {
+                            return 1;
+                        }
+                        return 0;
+                    });
+                    var reg = /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\/ ]/gim;
+
+                    var table_data = "";
+
+                    //if (arrResultItem[0] == 'E') {
+
+                    for (var y = 0; y < RESULT_COLLECTION.length; y++) {
+                        /*
+                        if (y >= RESULT_COLLECTION.length) {
+                            //table_data += blinkfill(y);
+                            break;
+                        }
+                        */
+                        /*
+                        table_data += "<tr class='table_head'>"
+                        table_data += "<td id='button' width='10%' class='text_center'>입차일</td>"
+                        table_data += "<td width='10%' class='text_center'>입차시간</td>"
+                        table_data += "<td width='20%' class='text_center'>차량번호</td>"
+                        table_data += "<td width='10%' class='text_center'>기사명</td>"
+                        table_data += "<td width='20%' class='text_center'>안전교육확인서</td>"
+                        table_data += "<td width='20%' class='text_center'>안전교육확인서<br/>확인여부</td>"
+                        table_data += "<td width='10%' class='text_center'>출차시간</td>"
+                        table_data += "</tr>"
+                        */
+
+                        //for (var x = 0; x < RESULT_COLLECTION.length - 1; x++) {
+                        table_data += "<tr>";
+                        table_data += "<td width='13%' class='text_center'>" + "<span>" + RESULT_COLLECTION[y].WADAT + "</span></td>";
+                        table_data += "<td width='13%' class='text_center'>" + RESULT_COLLECTION[y].WATIM.substr(0, 5) + "</td>";
+                        table_data += "<td width='18%' class='text_center'>" + RESULT_COLLECTION[y].CARNO + "</td>";
+                        table_data += "<td width='13%' class='text_center'>" + RESULT_COLLECTION[y].TNAME + "</td>";
+
+                        /*
+                        pdflink = RESULT_COLLECTION[y].WADAT.replace(reg, "") + "/" + RESULT_COLLECTION[y].TRANO.replace(reg, "") + "_"
+                        //        + RESULT_COLLECTION[y].WATIM.replace(reg, "").substr(0, 4) + "_" + RESULT_COLLECTION[y].CARNO.replace(reg, "") + "_"
+                                + RESULT_COLLECTION[y].TNAME.replace(reg, "") + ".pdf";
+
+                        if (RESULT_COLLECTION[y].TRANO != "") {
+                            table_data += "<td width='10%' class='text_center'>" + "<a href='pdfjs-2.10.377-dist/web/viewer.html?file=/tmspdf/" + pdflink + "' target=_blank>"
+                                + "<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='rgb(255,214,98)' class='bi bi-folder-plus' viewBox='0 0 16 16'>"
+                                + "<path d='m.5 3 .04.87a1.99 1.99 0 0 0-.342 1.311l.637 7A2 2 0 0 0 2.826 14H9v-1H2.826a1 1 0 0 1-.995-.91l-.637-7A1 1 0 0 1 2.19 4h11.62a1 1 0 0 1 .996 1.09L14.54 8h1.005l.256-2.819A2 2 0 0 0 13.81 3H9.828a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 6.172 1H2.5a2 2 0 0 0-2 2zm5.672-1a1 1 0 0 1 .707.293L7.586 3H2.19c-.24 0-.47.042-.683.12L1.5 2.98a1 1 0 0 1 1-.98h3.672z'/>"
+                                + "<path d='M13.5 10a.5.5 0 0 1 .5.5V12h1.5a.5.5 0 1 1 0 1H14v1.5a.5.5 0 1 1-1 0V13h-1.5a.5.5 0 0 1 0-1H13v-1.5a.5.5 0 0 1 .5-.5z'/></svg></a>" + "</td>";
+                        } else {
+                            table_data += "<td width='10%' class='text_center'></td>";
+                        }
+                        if (RESULT_COLLECTION[y].CONF != "") {
+                            table_data += "<td width='15%' class='text_center'>"
+                                + "<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='rgb(255,214,98)' class='bi bi-check-circle-fill' viewBox='0 0 16 16'>"
+                                + "<path d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z'/></svg>" + "</td>";
+                        } else {
+                            table_data += "<td width='15%' class='text_center text_gray'>" + "<span onclick=confirm('"
+                                + RESULT_COLLECTION[y].WADAT.replace(reg, "") + "','" + RESULT_COLLECTION[y].CARNO.replace(reg, "") + "','"
+                                + RESULT_COLLECTION[y].TELNO.replace(reg, "") + "'); return false;>서명 미완료</span>" + "</td>";
+                        }
+                        */
+                        table_data += "<td width='10%' class='text_center'>" + "<a href='javascript:;' onclick='javascript:showPopup(""
+                            + RESULT_COLLECTION[y].WADAT + "", ""
+                            + RESULT_COLLECTION[y].TNAME + "", ""
+                            + RESULT_COLLECTION[y].CARNO + "", ""
+                            + RESULT_COLLECTION[y].TRLNO + "", ""
+                            + RESULT_COLLECTION[y].TELNO + "", ""                                
+                            + RESULT_COLLECTION[y].TRANO + "", ""                                
+                            + RESULT_COLLECTION[y].CONF + "")'>"
+                            + "<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='rgb(255,214,98)' class='bi bi-folder-plus' viewBox='0 0 16 16'>"
+                            + "<path d='m.5 3 .04.87a1.99 1.99 0 0 0-.342 1.311l.637 7A2 2 0 0 0 2.826 14H9v-1H2.826a1 1 0 0 1-.995-.91l-.637-7A1 1 0 0 1 2.19 4h11.62a1 1 0 0 1 .996 1.09L14.54 8h1.005l.256-2.819A2 2 0 0 0 13.81 3H9.828a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 6.172 1H2.5a2 2 0 0 0-2 2zm5.672-1a1 1 0 0 1 .707.293L7.586 3H2.19c-.24 0-.47.042-.683.12L1.5 2.98a1 1 0 0 1 1-.98h3.672z'/>"
+                            + "<path d='M13.5 10a.5.5 0 0 1 .5.5V12h1.5a.5.5 0 1 1 0 1H14v1.5a.5.5 0 1 1-1 0V13h-1.5a.5.5 0 0 1 0-1H13v-1.5a.5.5 0 0 1 .5-.5z'/></svg></a>" + "</td>";
+                        if (RESULT_COLLECTION[y].CONF != "") {
+                            table_data += "<td width='15%' class='text_center'>"
+                                + "<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' fill='rgb(255,214,98)' class='bi bi-check-circle-fill' viewBox='0 0 16 16'>"
+                                + "<path d='M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z'/></svg>" + "</td>";
+                        } else {
+                            table_data += "<td width='15%' class='text_center text_gray'>" + "<span>서명 미완료</span>" + "</td>";
+                        }
+
+                        table_data += "<td width='8%' class='text_center'>" + RESULT_COLLECTION[y].EXTIM.substr(0, 5) + "</td>";
+                        table_data += "</tr>";
+                        //}
+
+                    }
+                    $("#table_data").html(table_data);
+
+
+                } else {
+                    document.getElementById("empty_data").innerHTML = "<div class='empty_data'><span>SAP 연결에 오류가 발생하였습니다</span></div>";
+                }
+            },
+            complete: function () {
+            },
+            error: function (request, status, error) {
+                //alert("code:" + request.status + "
+" + "message:" + request.responseText + "
+" + "error:" + error);
+                return;
+            }
+        });
+    }
+
+    function getToday() {
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = ("0" + (1 + date.getMonth())).slice(-2);
+        var day = ("0" + date.getDate()).slice(-2);
+
+        return year + "-" + month + "-" + day;
+    }
+
+    /*
+    function confirm(I_WADAT, I_CARNO, I_TELNO) {
+
+        Dialog.confirm(I_CARNO + ' 차량의 안전교육확인서에 서명하시겠습니까?', '확인', (dlg) => {
+            dlg.close();
+            confirm1(I_WADAT, I_CARNO, I_TELNO);
+        }, (dlg) => {
+            dlg.close();
+            return false;
+        });
+    }
+    */
+
+    function confirm1(I_WADAT, I_CARNO, I_TELNO, I_TRANO) {
+
+        if (canvas.toDataURL().length > 7400) {
+            alert("서명이 너무 깁니다");
+            return false;
+        }
+
+        if (canvas.toDataURL().length < 1500) {
+            alert("서명이 너무 짧습니다");
+            return false;
+        }
+
+        console.log(canvas.toDataURL());
+
+        console.log($("#I_WADAT").text());
+        console.log($("#I_TRANO").text());
+        console.log($("#I_CARNO").text());
+        console.log($("#I_TELNO").text());
+        console.log($("#I_TNAME").text());
+
+        // Note: The following AJAX call depends on a backend service at the specified .aspx endpoint.
+        // This will require a server environment capable of processing this request.
+        jQuery.ajax({
+            type: "post",
+            data: {
+                I_WADAT: $("#I_WADAT").text(), I_CARNO: $("#I_CARNO").text(), I_TELNO: $("#I_TELNO").text(), I_TRANO: $("#I_TRANO").text(), I_IMG: canvas.toDataURL(),
+            },
+            url: tms_path + "ext_conf_pdf.aspx",
+
+            //dataType:"text/html",
+            success: function (result) {
+                if (result != undefined) {
+
+                    var arrResultItem = result.split('::#');
+
+                    if (arrResultItem[0] == "E") {
+                        alert(result);
+                    } else {
+                        $("#backgroundPopup").css({
+                            "opacity": "0.7"
+                        });
+                        $("#backgroundPopup").fadeIn("slow");
+                        $("#popup").fadeIn("slow");
+
+                        if ($('#popup').is(':visible')) {
+                            var timeout = window.setTimeout(function () {
+                                $('#popup').stop().fadeOut('medium');
+                                $('#backgroundPopup').stop().fadeOut('medium');
+                            }, 2000);
+                        }
+                        closePopup();
+                    }
+                } else {
+                    document.getElementById("empty_data").innerHTML = "<div class='empty_data'><span>SAP 연결에 오류가 발생하였습니다</span></div>";
+                }
+            },
+            complete: function () {
+            },
+            error: function (request, status, error) {
+                //alert("code:" + request.status + "
+" + "message:" + request.responseText + "
+" + "error:" + error);
+                return;
+            }
+        });
+
+    }
+
+    function showPopup(I_WADAT, I_TNAME, I_CARNO, I_TRLNO, I_TELNO, I_TRANO, I_CONF) {
+
+        if (ctx != null) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        $("#sign_img").attr("src", "images/noimage.png");
+
+        $("#I_WADAT").html(I_WADAT);
+        $("#I_TRANO").html(I_TRANO);
+
+        $("#I_TNAME").html(I_TNAME);
+        $("#I_CARNO").html(I_CARNO);
+        $("#I_TRLNO").html(I_TRLNO);
+        $("#I_TELNO").html(I_TELNO);
+
+
+        if (I_CONF != "") {
+            $("#button1").hide();
+            $("#button2").hide();
+
+            console.log("I_WADAT : " + I_WADAT + "I_CARNO : " + I_CARNO + "I_TELNO : " + I_TELNO + "I_TRANO : " + I_TRANO);
+            // Note: The following AJAX call depends on a backend service at the specified .aspx endpoint.
+            // This will require a server environment capable of processing this request.
+            jQuery.ajax({
+                type: "post",
+                data: {
+                    I_WADAT: I_WADAT, I_CARNO: I_CARNO, I_TELNO: I_TELNO, I_TRANO: I_TRANO,
+                },
+                url: tms_path + "ext_conf_pdf_call.aspx",
+
+                //dataType:"text/html",
+                success: function (result) {
+                    if (result != undefined) {
+
+                        var arrResultItem = result.split('::#');
+
+                        $("#drawCanvas").hide();
+                        $("#sign_img").show();
+
+                        if (arrResultItem[0] == "E") {
+                            return false;
+                            alert(arrResultItem[1] + " : SAP 오류");
+                        } else {
+
+                            $("#sign_img").attr("src", arrResultItem[2]);
+
+                            /*
+                            var copyCanvas = document.getElementById('drawCanvas');
+                            var copyContext = copyCanvas.getContext('2d');
+
+                            var image = new Image();
+                            //image.src = "data:image/png;base64,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";
+
+                            image.src = arrResultItem[1];
+
+                            image.onload = function () {
+                                copyContext.drawImage(image, 0, 0);
+                            }
+                            */
+                        }
+                    } else {
+                        document.getElementById("empty_data").innerHTML = "<div class='empty_data'><span>SAP 연결에 오류가 발생하였습니다</span></div>";
+                    }
+                },
+                complete: function () {
+                },
+                error: function (request, status, error) {
+                    //alert("code:" + request.status + "
+" + "message:" + request.responseText + "
+" + "error:" + error);
+                    return;
+                }
+            });
+
+        } else {
+
+            if (getToday() == sDate) {
+
+                $("#drawCanvas").show();
+                $("#sign_img").hide();                
+
+                $("#button1").show();
+                $("#button2").show();
+            } else {
+
+                $("#drawCanvas").hide();
+                $("#sign_img").show();
+
+                $("#button1").hide();
+                $("#button2").hide();
+            }
+        }
+
+        $("#popLayer").show();
+    }
+
+    function closePopup() {
+        $("#popLayer").hide();
+    }
+
+</script>
+</head>
+<body onload="ext_car_list();">
+
+    <div id="popup">  
+        <span class="text_sign">서명되었습니다</span> 
+    </div>  
+
+    <div id='popLayer' class='popLayer'>
+        <div class="popLayer_border">
+        <div class="sign_head">
+        운송업체 및 운송기사 교육일지
+        </div>
+        <div class="body_title">
+           <div class="title1">제품출고전</div>  
+        </div>
+        <div class="body_data">
+        1. 운송업체는 물류팀의 차량배차 요구시 즉시 배차토록 한다.<br />
+        2. 배차된 차량기사는 후문경비실에 차량순번표를 접수한다.</br>
+        3. 접수된 차량순번표를 배차담당자에게 제시하여 담당자의 지시를 따른다.</br>
+        4. 차량은 지정된 구획선에 주,정차 시켜놓고 시동을 끈다.</br>
+        5. 차량기사는 즉시 출고할 수 있도록 적재함을 정리정돈 한다.</br>
+        6. 우천시 적재함의 물기를 제거하여 제품의 손상이 없도록 한다.</br>
+        7. 입회자의 차량호출시 즉시 차량을 출고장소로 이동한다.</br>
+        8. 상차가 완료된 차량은 적재물의 낙하방지를 조치하고 다음 차량을 위해 다른 장소로 차량을 이동한다.</br>
+        9. 운송업체는 농약관리법 시행령 제20조 1항의 "농약은 식료품,사료,의약품 또는 인화물질과 함께 수송하거나 과적하여 수송하지</br>
+        &nbsp;&nbsp;&nbsp;말 것"을 위배해서는 안되며 차량배치시 운송기사에게 본 내용을 교육시키고 운송기사는 반드시 이를 준수해야 한다.</br>
+        </div>
+        <div class="body_title">
+           <div class="title1">제품수송시</div>
+        </div>
+        <div class="body_data">
+        1. 인수,검수증의 거래처를 확인한 후 출발전 항상 거래처에 전화 통보 한다.<br />
+        2. 출발전 거래처의 특이사항을 확인하여 준수한다.(도착시간, 파렛트출고, 하차지지정)<br />
+        3. 출고된 제품은 납품내역서에 명시된 직송처 하차를 원칙으로 하며, 고객 요청에 의한 착지 변경이나 수송중 불가피한 상황으로<br />
+        &nbsp;&nbsp;&nbsp;도착지 변경이 필요한 경우에는 반드시 사전에 수송사와 물류팀에 보고하여 마케팅본부와 협의된 조치 지시에 따른다.<br />
+        4. 제품 수송시 보호대를 착용하여 적재물을 단단히 묶어 제품의 낙하를 방지한다.<br />
+        5. 우천시 비닐덮개를 사용하여 제품을 보호한다.<br />
+        6. 입고료(하차비) 지급방법은 상자당 200원씩 운송사에서 당일 운송기사에게 현금지급하여 거래처 도착시 입고료(하차비)를 선지급한다.<br />
+        &nbsp;&nbsp;&nbsp;<필요시 운송사에서 납품처와 사전 유선 협의 후 입고료(하차비)를 송금할 수도 있다><br />
+        &nbsp;&nbsp;&nbsp;거래처에서 운송기사에게 수작업으로 제품하차 요청시 입고료(하차비) 분배의 문제로 거래처와 기사간 마찰이<br />
+        &nbsp;&nbsp;&nbsp;발생하지 않도록 한다.<br />
+        7. 운송업체는 제품운송시 운행사고등의 비상사태에 대비하여 기사 보호장비(마스크,고무장갑,장화 등)와<br />
+        &nbsp;&nbsp;&nbsp;응급조치장비(삽,비닐,마대,빗자루 등) 를 운송기사가 지참토록 관리하고 운송차량의 장비보유 상태를 점검토록 한다.<br />
+        8. 운송중 사고발생시 제품운송사고 대응요령에 의거 응급조치사항을 취하고 즉시 운송사 및 물류팀으로 연락을 취하며,<br />
+        &nbsp;&nbsp;&nbsp;상수원 보호구역과 인접한 지역에 있는 통행제한 지정도로는 절대 운송을 금한다.<br />
+        &nbsp;&nbsp;&nbsp;(제품훼손 및 파봉,누액시 제품을 전량 회수토록 하여 사고로 인한 피해가<br />
+        &nbsp;&nbsp;&nbsp;농작물 및 상하수도에 오염되어 2차 오염이 발생하지 않도록 한다.)<br />
+        9. 운송중 휴대전화는 통화가 가능토록 한다.<br />
+        </div>
+        <div class="body_title">
+           <div class="title1">제품도착후</div>
+        </div>
+        <div class="body_data">
+        1. 거래처(고객)에 최대한 친절히 하여 하차시 발생할 수 있는 문제를 사전에 방지토록 한다.<br />
+        2. 제품하차시 취급주의로(던지지말것, 밟지말것) 제품이 파손되지 않도록 한다.<br />
+        3. 제품하차시 거래처(고객)와 문제발생시 즉시 물류팀으로 연락을 취하여 문제를 해결한다.<br />
+        4. 인수,검수증의 제품,규격을 확인 후 제품을 하차하여 하차오류를 방지한다.<br />
+        5. 거래처의 제품하차 후 인수자의 신분증을 확인하고 납품내역서(인수증)의 검수란에 날인을 받는다.<br />
+        6. 검수완료된 인수,검수증은 운송회사에 즉시 발송한다.<br />
+        </div>
+        <div class="sign_area">
+           <div class="area1">
+               <div>성명</div>
+               <div>차량번호</div>
+               <div>차량운송자격증번호</div>
+               <div class="noline">연락처</div>
+           </div>
+           <div class="area1">
+               <div id="I_WADAT" style="display:none;">&nbsp;</div>
+               <div id="I_TRANO" style="display:none;">&nbsp;</div>               
+               <div>&nbsp;<span id="I_TNAME">&nbsp;</span></div>
+               <div>&nbsp;<span id="I_CARNO">&nbsp;</span></div>
+               <div>&nbsp;<span id="I_TRLNO">&nbsp;</span></div>
+               <div class="noline">&nbsp;<span id="I_TELNO">&nbsp;</span></div>
+           </div>            
+           <div class="area2">서명&nbsp;
+            <canvas id="drawCanvas" width="240" height="90"></canvas>
+            <img id="sign_img" width="240" height="90">
+           </div>
+        </div>
+        <div class="button_area">
+            <div id="button1" class="button1">다시쓰기</div>
+
+            <div id="button2" class="button2" onclick="confirm1();">저장</div>
+
+            <div id="button3" class="button1" onclick="closePopup();">닫기</div>
+        </div>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="title">
+            <div class="title_logo">
+                <span>경농 생산본부 안전교육확인서</span><span id="config_text"></span>
+            </div>            
+            <div class="subtitle">
+                <span id="timer" style="display:none;"></span>
+                <span id="clock" style="display:none;"></span>
+                <span>
+                    <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	                     width="32px" height="32px" fill="#FAE3B4" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+                    <g>
+	                    <path d="M160,256H96v-64h64V256z M288,192h-64v64h64V192z M416,192h-64v64h64V192z M160,288H96v64h64V288z M288,288h-64v64h64V288z
+		                     M416,288h-64v64h64V288z M160,384H96v64h64V384z M288,384h-64v64h64V384z M128,96c17.672,0,32-14.313,32-32V32
+		                    c0-17.688-14.328-32-32-32S96,14.313,96,32v32C96,81.688,110.328,96,128,96z M512,64v448H0V64h80c0,26.469,21.531,48,48,48
+		                    c26.469,0,48-21.531,48-48h160c0,26.469,21.531,48,48,48s48-21.531,48-48H512z M480,160H32v320h448V160z M384,96
+		                    c17.688,0,32-14.313,32-32V32c0-17.688-14.312-32-32-32s-32,14.313-32,32v32C352,81.688,366.312,96,384,96z"/>
+                    </g></svg>
+                </span>
+                <button id="simplepicker" class="simplepicker-btn"></button>
+                <span id="count"></span>
+                <span id="cnt"></span>                
+            </div>
+        </div>
+
+        <div class="contents">
+            <div class="div_head">
+                <table class='table_head'>
+                    <tr>
+                        <td width="13%" class='text_center'>입차일</td>
+                        <td width="13%" class='text_center'>입차시간</td>
+                        <td width="18%" class='text_center'>차량번호</td>
+                        <td width="13%" class='text_center'>기사명</td>
+                        <td width="10%" class='text_center'>안전교육확인서</td>
+                        <td width="15%" class='text_center'>안전교육확인서<br/>확인여부</td>
+                        <td width="8%" class='text_center'>출차시간</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="div_data">
+                <table class="table_data" id="table_data"></table>
+            </div>
+            <div id="empty_data">
+            </div>
+        </div>
+    </div>
+    <div id="backgroundPopup"></div>
+
+  <script>
+    let simplepicker = new SimplePicker({
+      zIndex: 10
+    });
+
+    //simplepicker.open();
+
+    const $button = document.querySelector('button');
+
+    $button.addEventListener('click', (e) => {
+      simplepicker.open();
+    });
+
+    // $eventLog.innerHTML += '
+
+';
+    simplepicker.on('submit', (date, readableDate) => {
+      //$button.innerHTML = readableDate;
+      window.open("tms_sign.html?sDate=" + readableDate, target = "_self");
+    });
+
+    simplepicker.on('close', (date) => {
+      //$eventLog.innerHTML += 'Picker Closed'  + '
+';
+    });
+  </script>
+
+<script language="javascript">   
+
+    var isDrawing = false;
+    var x = 0;
+    var y = 0;
+
+    var canvas = document.getElementById("drawCanvas");
+    var ctx = canvas.getContext("2d");
+
+
+    if (window.addEventListener) {
+        window.addEventListener('load', InitEvent, false);
+    }
+
+    var tool;
+
+    function InitEvent() {
+        if (!canvas) {
+            alert("캔버스 객체를 찾을 수 없음");
+            return;
+        }
+        if (!canvas.getContext) {
+            alert("Drawing Contextf를 찾을 수 없음");
+            return;
+        }
+        if (!ctx) {
+            alert("getContext() 함수를 호출 할 수 없음");
+            return;
+        }
+        // Pencil tool 객체를 생성 한다.
+        tool = new tool_pencil();
+        canvas.addEventListener('touchstart', ev_canvas, false);
+        canvas.addEventListener('touchmove', ev_canvas, false);
+        canvas.addEventListener('touchend', ev_canvas, false);
+    }
+    function tool_pencil() {
+        var tool = this;
+        this.started = false;
+
+        // 마우스를 누르는 순간 그리기 작업을 시작 한다. 
+        this.touchstart = function (ev) {
+            document.body.style.overflow = "hidden";
+            ctx.beginPath();
+            ctx.moveTo(ev._x, ev._y);
+            tool.started = true;
+        };
+        // 마우스가 이동하는 동안 계속 호출하여 Canvas에 Line을 그려 나간다
+        this.touchmove = function (ev) {
+            if (tool.started) {
+                ctx.lineTo(ev._x, ev._y);
+                ctx.stroke();
+            }
+        };
+        // 마우스 떼면 그리기 작업을 중단한다
+        this.touchend = function (ev) {
+            document.body.style.overflow = "auto";
+            if (tool.started) {
+                tool.touchmove(ev);
+                tool.started = false;
+            }
+        };
+    }
+    // Canvas요소 내의 좌표를 결정 한다.
+    function ev_canvas(ev) {
+        if (ev.layerX || ev.layerX == 0) { // Firefox 브라우저
+            ev._x = ev.layerX;
+            ev._y = ev.layerY;
+        }
+        else if (ev.offsetX || ev.offsetX == 0) { // Opera 브라우저
+            ev._x = ev.offsetX;
+            ev._y = ev.offsetY;
+        }
+        else if (ev.changedTouches[0] || ev.changedTouches[0].pageX == 0) {	//핸드폰
+            var left = 0;
+            var top = 0;
+            var elem = document.getElementById('drawCanvas');
+
+            while (elem) {
+                left = left + parseInt(elem.offsetLeft);
+                top = top + parseInt(elem.offsetTop);
+                elem = elem.offsetParent;
+            }
+
+            ev._x = ev.changedTouches[0].pageX - left;
+            ev._y = ev.changedTouches[0].pageY - top;
+        }
+        // tool의 이벤트 핸들러를 호출한다.
+        var func = tool[ev.type];
+        if (func) {
+            func(ev);
+        }
+    }
+
+    canvas.addEventListener("mousedown", function (e) {
+        x = e.offsetX;
+        y = e.offsetY;
+        isDrawing = true;
+    });
+
+    canvas.addEventListener("mousemove", function (e) {
+        if (isDrawing) {
+            drawSign(ctx, x, y, e.offsetX, e.offsetY);
+            x = e.offsetX;
+            y = e.offsetY;
+        }
+    });
+
+    canvas.addEventListener("mouseup", function (e) {
+        if (isDrawing) {
+            drawSign(ctx, x, y, e.offsetX, e.offsetY);
+            x = 0;
+            y = 0;
+            isDrawing = false;
+        }
+    });
+
+    canvas.addEventListener("mouseleave", function (e) {
+        x = 0;
+        y = 0;
+        isDrawing = false;
+    });
+
+    document.getElementById("button1").addEventListener("click", function (e) {
+        if (ctx != null) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    })
+
+    function drawSign(ctx, x1, y1, x2, y2) {
+        if (ctx != null) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.strokeStyle = "#000";
+            ctx.lineWidth = 2;
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+            ctx.closePath();
+            ctx.restore();
+        }
+    }
+
+</script>
+
+</body>
+
+</html>
