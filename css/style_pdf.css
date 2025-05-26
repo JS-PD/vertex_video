@@ -1,0 +1,223 @@
+@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap');
+
+body {
+    background-color:#1E4147;
+    color:#FAE3B4;
+    margin:0;
+}
+
+.main {
+    padding:20px;
+    text-align : center;
+}
+
+.title {
+    width:100%;
+    background-color:#1E4147;
+}
+
+.title .title_logo {
+    line-height:80px;
+    color:#FAE3B4;
+    font-size:50px;  
+    font-family: 'Do Hyeon', sans-serif;
+    text-decoration: underline;
+}
+
+.subtitle {
+    display: flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.contents {
+    width:100%;
+    padding-top:10px;
+}
+
+.div_data {
+}
+
+.table_head {
+    font-weight:bold;
+    background-color:#2b4d52;
+    width:100%;
+    font-size:18px;
+    border-spacing: 0px;
+    border-collapse: separate;
+}
+
+.table_head td {
+    height:40px;
+    border-style:solid;
+    border-width:1px;
+    border-color:#0d363d;
+
+}
+
+.table_data {
+    width:100%;
+    font-size:18px;
+    border-spacing: 0px;
+    border-collapse: separate;
+}
+
+.table_data td {
+    height:40px;
+    border-style:solid;
+    border-width:1px;
+    border-color:#0d363d;
+}
+
+
+.text_center {
+    text-align:center;
+}
+
+.text_left {
+    text-align:left;
+}
+
+.text_gray {
+    color: gray;
+}
+
+.empty_data {
+    width:100%;
+    color:rgb(255,191,0);
+    line-height:300px;
+    text-align:center;
+    font-size:40px;
+}
+
+.text_sign{
+    line-height:120px;
+    color:#1E4147;
+}
+
+#backgroundPopup{
+    display:none;
+    position:fixed;
+    height:100%;
+    width:100%;
+    top:0;
+    left:0;
+    z-index:1;
+}
+#popup{
+    display:none;
+    position:fixed;
+    width:100%;
+    background:#FAE3B4;
+    z-index:2;
+    font-size:24px;
+    font-weight:bold;
+    text-align:center;
+}
+
+::-webkit-scrollbar {
+width: 0px;
+background-color: white;
+}
+
+
+
+
+.popLayer {
+    display:none;
+    position:absolute;
+    width: 800px;
+    left: 50%;
+    margin-left: -400px; /* half of width */
+    top: 0;
+    overflow: auto;  
+    background: #fff;
+    color:#000;
+}
+.popLayer_border {
+    margin:10px;
+    border: 5px solid #000;
+}
+.sign_head {
+  border-bottom: 1px solid #000;
+  font-size: 26px;
+  text-align: center;
+  line-height:50px;
+}
+.sign_head .body_title {
+    display: flex; 
+    flex-wrap: nowrap;
+}
+.body_title .title1 {
+  border-bottom: 1px solid #000;
+  border-right: 1px solid #000;
+  width:200px;
+  text-align: center;
+  line-height:20px;
+  font-weight: bold;
+}
+.body_data {
+  font-size:12px;
+  padding:10px;
+  line-height:20px;
+  border-bottom: 1px solid #000;
+}
+.sign_area {
+    display: flex; 
+    flex-wrap: nowrap;
+  border-bottom: 1px solid #000;
+}
+.sign_area .area1 div {
+  width:180px;
+  line-height:30px;
+  border-bottom: 1px solid #000;
+  border-right: 1px solid #000;
+  padding-left:10px;
+  font-size:14px;
+}
+
+.sign_area .area1 .noline {
+  border-bottom: 0px solid #000;
+}
+.sign_area .area2 {
+    display: flex; 
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items:center;
+    width:390px;
+    padding:5px;
+}
+.button_area {
+    display: flex; 
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    align-items:center;
+    width:725px;
+    padding:5px;
+}
+
+canvas {
+    border: 3px solid rgb(0, 148, 255);
+}
+
+img {
+    border: 3px solid rgb(0, 148, 255);
+}
+
+.button_area .button1 {
+    padding: .3em .4em;
+    margin-left: 1em;
+    width: 5em;
+    text-align: center;
+    background-color:  #FAE3B4;
+    color:#1E4147;
+}
+
+.button_area .button2 {
+    padding: .3em .4em;
+    margin-left: 1em;
+    width: 5em;
+    text-align: center;
+    background-color:  #1E4147;
+    color:#FAE3B4;
+}
